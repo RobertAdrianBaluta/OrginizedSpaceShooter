@@ -1,4 +1,3 @@
-using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -12,7 +11,12 @@ public struct SpeedComponent : IComponentData
     public float speed;
 }
 
-public struct MeshComponent : IComponentData
+public struct Translation : IComponentData
 {
-    public Entity meshEntity;  // A reference to the mesh prefab
+    public float3 Value;
 }
+
+//public struct MeshComponent : IComponentData
+//{
+ //   public Entity meshEntity;  // A reference to the mesh prefab
+//}
