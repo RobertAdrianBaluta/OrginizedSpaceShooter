@@ -1,5 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 
 public struct PositionComponent : IComponentData
 {
@@ -14,6 +15,11 @@ public struct SpeedComponent : IComponentData
 public struct Translation : IComponentData
 {
     public float3 Value;
+}
+
+public struct EnemyPrefab : IComponentData
+{
+    public Entity enemyPrefab;
 }
 
 //public struct MeshComponent : IComponentData

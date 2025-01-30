@@ -6,14 +6,15 @@ using Unity.Transforms;
 
 public class EnemySpawnerSystem : MonoBehaviour
 {
-     // Adjust the number of entities to spawn
-     public int entitiesCount = 10;
+    public int entitiesCount = 10;
 
-    [SerializeField] private Mesh enemyMesh;      // Assign a Cube/Sphere in the Inspector
-    [SerializeField] private Material enemyMaterial; // Assign a basic material
+    [SerializeField] private Mesh enemyMesh;
+    [SerializeField] private Material enemyMaterial;
+    [SerializeField] private GameObject enemyPrefab;
 
     void Start()
     {
+
         MakeEntities();
         OnDrawGizmos();
     }
@@ -23,27 +24,32 @@ public class EnemySpawnerSystem : MonoBehaviour
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
         EntityArchetype archetype = entityManager.CreateArchetype(
-          // Position
-            typeof(LocalToWorld),   // Required for rendering
-            typeof(RenderMeshUnmanaged),     // Mesh & Material
-            typeof(RenderBounds),   // Required for Hybrid Renderer
+        #region
+
+            typeof(RenderMeshUnmanaged),
+            typeof(RenderBounds),
+        #endregion
+            typeof(LocalToWorld),
             typeof(Translation),
-             typeof(SpeedComponent)
+            typeof(SpeedComponent)
         );
 
 
         for (int i = 0; i < entitiesCount; i++)
         {
             Entity entity = entityManager.CreateEntity(archetype);
+            World world = World.DefaultGameObjectInjectionWorld;
+            EntityManager entityManager1 = world.EntityManager;
 
-            // Set the LevelComponent's level field to a specific value
+            #region
+
             entityManager.SetComponentData(entity, new SpeedComponent { speed = 20.0f });
 
             float3 randomPosition = new float3(
-               UnityEngine.Random.Range(-100f, 100f), // Random X
-               0f,                                  // Y (flat ground)
-               UnityEngine.Random.Range(-100f, 100f) // Random Z
-               );
+                          UnityEngine.Random.Range(-10f, 10f),
+                           UnityEngine.Random.Range(-10f, 10f),
+                          0f // Random Z
+                          );
 
             entityManager.SetComponentData(entity, new Translation { Value = randomPosition });
 
@@ -54,16 +60,17 @@ public class EnemySpawnerSystem : MonoBehaviour
             };
 
             entityManager.SetComponentData(entity, renderMeshUnmanaged);
-           
+
             entityManager.SetComponentData(entity, new LocalToWorld
             {
                 Value = float4x4.TRS(randomPosition, quaternion.identity, new float3(1, 1, 1))
             });
+            #endregion
 
-            Debug.Log($"Entity {i} created with mesh: {renderMeshUnmanaged.mesh} and material: {renderMeshUnmanaged.materialForSubMesh}");
+            GameObject enemyGO = enemyPrefab;
+            //   Entity enemyEntity = entityManager1.GetComponentObject<GameObject>(enemyGO).Entity;
 
         }
-
     }
 
     void OnDrawGizmos()
@@ -71,7 +78,7 @@ public class EnemySpawnerSystem : MonoBehaviour
         var world = World.DefaultGameObjectInjectionWorld;
         if (world == null)
         {
-            Debug.LogWarning("World is not initialized yet!");
+            //   Debug.LogWarning("World is not initialized yet!");
             return; // Exit if world is null, preventing the null reference error.
         }
 
@@ -81,7 +88,7 @@ public class EnemySpawnerSystem : MonoBehaviour
         // Ensure we have valid EntityManager before proceeding
         if (entityManager == null)
         {
-            Debug.LogWarning("EntityManager is not available!");
+            // Debug.LogWarning("EntityManager is not available!");
             return;
         }
 
@@ -101,4 +108,3 @@ public class EnemySpawnerSystem : MonoBehaviour
         entities.Dispose();
     }
 }
-

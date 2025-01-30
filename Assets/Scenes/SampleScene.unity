@@ -370,8 +370,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entitiesCount: 10
-  enemyMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
-  enemyMaterial: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!4 &1187862669
 Transform:
   m_ObjectHideFlags: 0
