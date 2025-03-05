@@ -3,6 +3,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
+using TMPro;
 
 public class EnemySpawnerSystem : MonoBehaviour
 {
@@ -10,11 +11,12 @@ public class EnemySpawnerSystem : MonoBehaviour
 
     [SerializeField] private Mesh enemyMesh;
     [SerializeField] private Material enemyMaterial;
-    [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject  enemyTextPrefab;
+    [SerializeField] private GameObject  enemyShaderPrefab;
+
 
     void Start()
     {
-
         MakeEntities();
         OnDrawGizmos();
     }
@@ -25,13 +27,13 @@ public class EnemySpawnerSystem : MonoBehaviour
 
         EntityArchetype archetype = entityManager.CreateArchetype(
         #region
-
             typeof(RenderMeshUnmanaged),
             typeof(RenderBounds),
         #endregion
             typeof(LocalToWorld),
             typeof(Translation),
             typeof(SpeedComponent)
+
         );
 
 
@@ -41,18 +43,25 @@ public class EnemySpawnerSystem : MonoBehaviour
             World world = World.DefaultGameObjectInjectionWorld;
             EntityManager entityManager1 = world.EntityManager;
 
-            #region
 
             entityManager.SetComponentData(entity, new SpeedComponent { speed = 20.0f });
 
             float3 randomPosition = new float3(
-                          UnityEngine.Random.Range(-10f, 10f),
-                           UnityEngine.Random.Range(-10f, 10f),
+                          UnityEngine.Random.Range(-5f, 5f),
+                           UnityEngine.Random.Range(-5f, 5f),
                           0f // Random Z
                           );
 
             entityManager.SetComponentData(entity, new Translation { Value = randomPosition });
 
+            GameObject entityshader = Instantiate(enemyShaderPrefab, randomPosition, Quaternion.identity);
+            entityshader.GetComponent<ShaderRefrence>().entityshader = entity;
+            GameObject textObject = Instantiate(enemyTextPrefab, randomPosition, Quaternion.identity);
+            textObject.GetComponent<EntityTextReference>().entitytext = entity;
+            textObject.GetComponent<TextMeshPro>().text = UnityEngine.Random.Range(0, 2) == 0 ? "0" : "1";
+
+
+            #region
             RenderMeshUnmanaged renderMeshUnmanaged = new RenderMeshUnmanaged
             {
                 mesh = enemyMesh,
@@ -65,11 +74,11 @@ public class EnemySpawnerSystem : MonoBehaviour
             {
                 Value = float4x4.TRS(randomPosition, quaternion.identity, new float3(1, 1, 1))
             });
-            #endregion
+      
 
-            GameObject enemyGO = enemyPrefab;
+            //GameObject enemyGO = enemyPrefab;
             //   Entity enemyEntity = entityManager1.GetComponentObject<GameObject>(enemyGO).Entity;
-
+            #endregion
         }
     }
 
