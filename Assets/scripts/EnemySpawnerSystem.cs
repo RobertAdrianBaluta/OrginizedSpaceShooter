@@ -1,18 +1,16 @@
 ﻿using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Rendering;
 using Unity.Transforms;
+using Unity.Physics;
+
 using TMPro;
 
 public class EnemySpawnerSystem : MonoBehaviour
 {
     public int entitiesCount = 10;
-
-    [SerializeField] private Mesh enemyMesh;
-    [SerializeField] private Material enemyMaterial;
-    [SerializeField] private GameObject  enemyTextPrefab;
-    [SerializeField] private GameObject  enemyShaderPrefab;
+    [SerializeField] private GameObject enemyTextPrefab;
+    [SerializeField] private GameObject enemyShaderPrefab;
 
 
     void Start()
@@ -24,18 +22,11 @@ public class EnemySpawnerSystem : MonoBehaviour
     private void MakeEntities()
     {
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-
         EntityArchetype archetype = entityManager.CreateArchetype(
-        #region
-            typeof(RenderMeshUnmanaged),
-            typeof(RenderBounds),
-        #endregion
             typeof(LocalToWorld),
             typeof(Translation),
             typeof(SpeedComponent)
-
         );
-
 
         for (int i = 0; i < entitiesCount; i++)
         {
@@ -53,32 +44,15 @@ public class EnemySpawnerSystem : MonoBehaviour
                           );
 
             entityManager.SetComponentData(entity, new Translation { Value = randomPosition });
-
-            GameObject entityshader = Instantiate(enemyShaderPrefab, randomPosition, Quaternion.identity);
-            entityshader.GetComponent<ShaderRefrence>().entityshader = entity;
+        
             GameObject textObject = Instantiate(enemyTextPrefab, randomPosition, Quaternion.identity);
             textObject.GetComponent<EntityTextReference>().entitytext = entity;
             textObject.GetComponent<TextMeshPro>().text = UnityEngine.Random.Range(0, 2) == 0 ? "0" : "1";
-
-
-            #region
-            RenderMeshUnmanaged renderMeshUnmanaged = new RenderMeshUnmanaged
-            {
-                mesh = enemyMesh,
-                materialForSubMesh = enemyMaterial,
-            };
-
-            entityManager.SetComponentData(entity, renderMeshUnmanaged);
 
             entityManager.SetComponentData(entity, new LocalToWorld
             {
                 Value = float4x4.TRS(randomPosition, quaternion.identity, new float3(1, 1, 1))
             });
-      
-
-            //GameObject enemyGO = enemyPrefab;
-            //   Entity enemyEntity = entityManager1.GetComponentObject<GameObject>(enemyGO).Entity;
-            #endregion
         }
     }
 

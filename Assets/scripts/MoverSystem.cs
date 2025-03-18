@@ -11,8 +11,8 @@ public partial struct MoverSystem : ISystem
         // The system runs every frame
         state.RequireForUpdate<SpeedComponent>();
     }
-
-  /*  public void OnUpdate(ref SystemState state)
+    
+   public void OnUpdate(ref SystemState state)
     {
         float deltaTime = SystemAPI.Time.DeltaTime;
 
@@ -23,5 +23,5 @@ public partial struct MoverSystem : ISystem
             translation.ValueRW.Value.y += speed.ValueRO.speed * deltaTime;
         }
     }
-  */
+  
 }

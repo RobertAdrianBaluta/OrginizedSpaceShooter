@@ -369,9 +369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcb85465542614947942483aac574814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entitiesCount: 10
-  enemyMesh: {fileID: 0}
-  enemyMaterial: {fileID: 0}
+  entitiesCount: 1000
   enemyTextPrefab: {fileID: 5134144429336403093, guid: 505ce2ad59cae9a428b7e03b0f95ce3c, type: 3}
   enemyShaderPrefab: {fileID: 3881608591688258874, guid: 3e546d9ee04ac32479cc664726c50d23, type: 3}
 --- !u!4 &1187862669

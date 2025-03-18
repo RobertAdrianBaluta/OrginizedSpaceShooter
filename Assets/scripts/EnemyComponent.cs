@@ -22,6 +22,10 @@ public struct EnemyPrefab : IComponentData
 {
     public Entity enemyPrefab;
 }
+public struct CollisionComponent : IComponentData
+{
+    public bool hasCollided;
+}
 
 //public struct MeshComponent : IComponentData
 //{
