@@ -2,6 +2,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+<<<<<<< HEAD
 using Unity.Physics;
 
 using TMPro;
@@ -11,15 +12,34 @@ public class EnemySpawnerSystem : MonoBehaviour
     public int entitiesCount = 10;
     [SerializeField] private GameObject enemyTextPrefab;
     [SerializeField] private GameObject enemyShaderPrefab;
+=======
+using System.Collections;
+
+public class EnemySpawnerSystem : MonoBehaviour
+{
+    public int entitiesCount = 100;
+    public int x;
+    public int y;
+    public float cooldownTime = 0.3f;
+   // private bool isOnCooldown = false;
+
+
+    [SerializeField] private Mesh enemyMesh;
+    [SerializeField] private Material enemyMaterial;
+    //[SerializeField] private GameObject  enemyTextPrefab;
+    [SerializeField] private GameObject  enemyShaderPrefab;
+    [SerializeField] private GameObject  enemyCollisionPrefab;
+>>>>>>> c9207b23c7e9b49918ab10c0e8f9b3e4e2163d95
 
 
     void Start()
     {
-        MakeEntities();
-        OnDrawGizmos();
+        StartCoroutine(MakeEntities());
+   //     OnDrawGizmos();
+
     }
 
-    private void MakeEntities()
+    IEnumerator MakeEntities()
     {
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         EntityArchetype archetype = entityManager.CreateArchetype(
@@ -27,35 +47,69 @@ public class EnemySpawnerSystem : MonoBehaviour
             typeof(Translation),
             typeof(SpeedComponent)
         );
+<<<<<<< HEAD
 
+=======
+>>>>>>> c9207b23c7e9b49918ab10c0e8f9b3e4e2163d95
         for (int i = 0; i < entitiesCount; i++)
         {
+            yield return new WaitForSeconds(0.1f);
             Entity entity = entityManager.CreateEntity(archetype);
-            World world = World.DefaultGameObjectInjectionWorld;
-            EntityManager entityManager1 = world.EntityManager;
-
-
-            entityManager.SetComponentData(entity, new SpeedComponent { speed = 20.0f });
+            entityManager.SetComponentData(entity, new SpeedComponent { speed = 3.0f });
 
             float3 randomPosition = new float3(
-                          UnityEngine.Random.Range(-5f, 5f),
-                           UnityEngine.Random.Range(-5f, 5f),
+                          UnityEngine.Random.Range(10, 11),
+                           UnityEngine.Random.Range(5, -5),
                           0f // Random Z
                           );
 
             entityManager.SetComponentData(entity, new Translation { Value = randomPosition });
+<<<<<<< HEAD
         
             GameObject textObject = Instantiate(enemyTextPrefab, randomPosition, Quaternion.identity);
             textObject.GetComponent<EntityTextReference>().entitytext = entity;
             textObject.GetComponent<TextMeshPro>().text = UnityEngine.Random.Range(0, 2) == 0 ? "0" : "1";
 
+=======
+
+            //   GameObject entityshader = Instantiate(enemyShaderPrefab, randomPosition, Quaternion.identity);
+            //   entityshader.GetComponent<ShaderRefrence>().entityshader = entity;
+
+        ///    GameObject enemyObject = Instantiate(enemyPrefab, randomPosition, Quaternion.identity);
+       //   GameObject textObject = Instantiate(enemyTextPrefab, randomPosition, Quaternion.identity);
+       //    textObject.GetComponent<EntityTextReference>().entitytext = entity;
+        //    textObject.GetComponent<TextMeshPro>().text = UnityEngine.Random.Range(0, 2) == 0 ? "0" : "1";
+
+          GameObject entitycollision = Instantiate(enemyCollisionPrefab, randomPosition, Quaternion.identity);
+           entitycollision.GetComponent<EnemyCollisionRefrence>().entitycollision = entity; 
+
+            #region
+            RenderMeshUnmanaged renderMeshUnmanaged = new RenderMeshUnmanaged
+            {
+                mesh = enemyMesh,
+                materialForSubMesh = enemyMaterial,
+            };
+
+            entityManager.SetComponentData(entity, renderMeshUnmanaged);
+
+>>>>>>> c9207b23c7e9b49918ab10c0e8f9b3e4e2163d95
             entityManager.SetComponentData(entity, new LocalToWorld
             {
                 Value = float4x4.TRS(randomPosition, quaternion.identity, new float3(1, 1, 1))
             });
+<<<<<<< HEAD
+=======
+
+
+            //GameObject enemyGO = enemyPrefab;
+            //   Entity enemyEntity = entityManager1.GetComponentObject<GameObject>(enemyGO).Entity;
+            #endregion
+           
+>>>>>>> c9207b23c7e9b49918ab10c0e8f9b3e4e2163d95
         }
     }
-
+  
+  
     void OnDrawGizmos()
     {
         var world = World.DefaultGameObjectInjectionWorld;
@@ -90,4 +144,5 @@ public class EnemySpawnerSystem : MonoBehaviour
         // Dispose of the entities list after use to avoid memory leaks
         entities.Dispose();
     }
+   
 }
